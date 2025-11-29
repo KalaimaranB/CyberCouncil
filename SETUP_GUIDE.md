@@ -50,7 +50,7 @@ ollama create specialist -f Modelfile_DeepHat
 ### Step 1: Activate Virtual Environment
 
 ```bash
-cd "/Users/kalaimaranbalasothy/GitHub Projects/CyberCouncil"
+cd "/DIRECTORY/CyberCouncil"
 source .venv/bin/activate
 ```
 
@@ -202,7 +202,7 @@ python council.py
 
 ```bash
 # 1. Navigate to project
-cd "/Users/kalaimaranbalasothy/GitHub Projects/CyberCouncil"
+cd "/DIRECTORY/CyberCouncil"
 
 # 2. Activate virtual environment
 source .venv/bin/activate

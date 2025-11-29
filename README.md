@@ -212,22 +212,6 @@ Edit `core/config.py` to customize:
 | `pause teach` | Enter general mode (no logging) |
 | `resume` | Return to project mode |
 
-## 🧬 For Job Applications
-
-**This project showcases:**
-
-✅ **Graph Neural Network readiness** - NetworkX graphs, relationship inference, ready for torch-geometric
-✅ **Software engineering** - Modular architecture, 75 passing tests, comprehensive documentation  
-✅ **Deep learning** - PyTorch embeddings, hardware acceleration, vector similarity
-✅ **Real-world application** - Not toy datasets, actual cybersecurity use case
-✅ **Professional practices** - Git workflow, testing, CI/CD ready
-
-**Direct parallels to computational biology:**
-- Attack graphs → Protein interaction networks
-- Entity extraction → Protein/domain identification
-- Relationship inference → Interaction prediction
-- GNN scoring → Function prediction
-
 ## ⚖️ License & Disclaimer
 
 **Educational use only.** This tool is designed for **authorized security testing only**. Users are responsible for ensuring they have explicit permission before testing any systems. Unauthorized access is illegal.
