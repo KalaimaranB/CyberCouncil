@@ -1,0 +1,54 @@
+# Sensitive Data - Do NOT commit these to public repositories
+notes/
+projects/
+chroma_db/
+
+# Large Model Files (download separately)
+*.gguf
+DeepHat-V1-7B.Q4_K_M.gguf
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+
+# Testing artifacts (keep test files, ignore coverage artifacts)
+.pytest_cache/
+.coverage
+htmlcov/

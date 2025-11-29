@@ -1,0 +1,14 @@
+langchain-community
+langchain-chroma
+langchain-text-splitters
+langchain-core
+torch
+transformers
+sentence-transformers
+chromadb
+pypdf
+ollama
+duckduckgo-search
+networkx
+pytest
+pytest-cov
