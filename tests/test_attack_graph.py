@@ -5,8 +5,47 @@ Tests entity extraction, relationship inference, and graph persistence.
 
 import pytest
 import json
+import os
 from pathlib import Path
 from graph.attack_graph import AttackGraph
+
+
+@pytest.fixture
+def mock_config(tmp_path, monkeypatch):
+    """Mock config.PROJECTS_DIR to use temp directory"""
+    monkeypatch.setattr('core.config.PROJECTS_DIR', str(tmp_path / "projects"))
+    return tmp_path
+
+
+@pytest.fixture
+def sample_active_record(tmp_path):
+    """Create a sample active_record.md file for testing"""
+    # Create project directory
+    project_dir = tmp_path / "projects" / "test_project"
+    project_dir.mkdir(parents=True)
+    
+    # Create sample active_record.md
+    active_record_path = project_dir / "active_record.md"
+    active_record_content = """# Test Project Active Record
+
+## ENUMERATION
+
+- 🎯 IP [DOMAIN_CONTROLLER]: 10.10.10.5
+- ✅ Open Port [OPEN]: 445
+- ✅ Open Port [OPEN]: 88
+- ⚙️ Service: SMB
+- ⚙️ Service: Kerberos
+- 🏰 Domain [INFRASTRUCTURE]: CORP
+
+## EXPLOITATION
+
+- 🚨 Vulnerability: MS17-010
+- 👤 Username [CREDENTIAL]: administrator
+- 🔑 Password [CREDENTIAL]: P@ssw0rd123
+"""
+    
+    active_record_path.write_text(active_record_content)
+    return active_record_path
 
 
 class TestAttackGraph:

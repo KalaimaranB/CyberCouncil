@@ -294,30 +294,3 @@ class AttackGraph:
         if node_id in self.graph:
             return list(self.graph.neighbors(node_id))
         return []
-
-
-if __name__ == "__main__":
-    # Test the attack graph
-    print("Testing Attack Graph...")
-    
-    # Create test graph
-    graph = AttackGraph("test_project")
-    
-    # Add some test nodes
-    graph.add_node("10.10.10.5", node_type="IP", context="DC")
-    graph.add_node("SMB", node_type="SERVICE")
-    graph.add_node("Port_445", node_type="PORT", port_number="445")
-    graph.add_node("MS17-010", node_type="VULNERABILITY", severity="CRITICAL")
-    
-    # Add relationships
-    graph.add_edge("10.10.10.5", "SMB", relationship="runs")
-    graph.add_edge("SMB", "Port_445", relationship="on_port")
-    graph.add_edge("SMB", "MS17-010", relationship="has_vuln")
-    
-    # Get stats
-    stats = graph.get_statistics()
-    print(f"\nGraph Statistics: {stats}")
-    
-    print(f"\nIPs: {graph.get_nodes_by_type('IP')}")
-    print(f"Services: {graph.get_nodes_by_type('SERVICE')}")
-    print(f"Neighbors of SMB: {graph.get_neighbors('SMB')}")
