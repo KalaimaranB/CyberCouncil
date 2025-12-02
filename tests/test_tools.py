@@ -22,6 +22,7 @@ class TestSanitization:
         result = tools.sanitize_project_name("../../etc/passwd")
         assert ".." not in result
         assert "/" not in result
+        assert result == "passwd"
     
     def test_sanitize_removes_special_chars(self):
         """Test removal of filesystem-dangerous characters"""
@@ -41,8 +42,9 @@ class TestSanitization:
     def test_sanitize_empty_name(self):
         """Test that empty names get default"""
         result = tools.sanitize_project_name("")
-        assert result.startswith("project_")
-        assert result[8:].isdigit()  # Timestamp
+        prefix, _, ts = result.partition("_")
+        assert prefix == "project"
+        assert ts.isdigit()
     
     def test_sanitize_removes_leading_dots(self):
         """Test dots are stripped"""
@@ -109,6 +111,12 @@ class TestProjectOperations:
         assert "test_project" in content
         assert "Test data" in content
 
+    def test_update_missing_section_error(self, tmp_path, mock_config):
+        tools.init_project("test_project")
+        result = tools.update_active_record("test_project", "NONEXISTENT", "data")
+        assert "Error" in result
+
+
 
 class TestBackup:
     """Test backup functionality"""
@@ -143,6 +151,13 @@ class TestBackup:
         
         # Should keep only 5 most recent
         assert len(backups) <= 5
+
+    def test_backup_no_record(self, tmp_path, mock_config):
+        os.makedirs(Path(mock_config.PROJECTS_DIR) / "test_project")
+        result = tools.backup_active_record("test_project")
+        assert "No active record" in result
+
+
 
 
 class TestLessonsLearned:
