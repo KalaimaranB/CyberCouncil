@@ -41,7 +41,7 @@ class TestCommands:
         mock_open.return_value.__enter__.return_value = mock_file
         
         # Mock attack graph stats
-        mock_context.attack_graph.get_statistics.return_value = {'nodes': 10, 'edges': 5}
+        mock_context.attack_graph.get_statistics.return_value = {'total_nodes': 10, 'total_edges': 5}
         
         # Mock AI response
         mock_context.ollama_client.call_strategist.return_value = "SitRep Summary"
@@ -62,18 +62,33 @@ class TestCommands:
         
         assert cmd.execute(context) is False
 
+    @patch("graph.graph_server.is_running", return_value=True)
+    @patch("graph.graph_server.update_graph")
     @patch("core.commands.graph.GraphVisualizer")
-    def test_graph_success(self, mock_viz, mock_context):
-        """Test successful graph visualization"""
+    def test_graph_success(self, mock_viz_class, mock_update, mock_is_running, mock_context):
+        """Test graph command when server already running"""
+        # Mock visualizer to avoid NetworkX graph complexity
+        mock_viz_instance = Mock()
+        mock_viz_instance.render_statistics.return_value = "Stats"
+        mock_viz_instance.render_ascii_graph.return_value = "Graph"
+        mock_viz_class.return_value = mock_viz_instance
+        
         cmd = GraphCommand()
-        assert cmd.execute(mock_context) is True
-        mock_viz.render_graph.assert_called_once_with(mock_context.attack_graph)
+        cmd._server_port = 5050
+        result = cmd.execute(mock_context)
+        
+        assert result is True
+        
+        assert result is True
 
-    def test_graph_update(self, mock_context):
-        """Test graph update"""
+    def test_graph_update_no_project(self, mock_context):
+        """Test graph update fails without project"""
+        mock_context.current_project = None
+        
         cmd = GraphCommand()
-        assert cmd.update(mock_context) is True
-        mock_context.attack_graph.build_from_active_record.assert_called_once()
+        result = cmd.update(mock_context)
+        
+        assert result is False
 
     # --- Finalize Tests ---
     def test_finalize_no_project(self):

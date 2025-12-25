@@ -12,3 +12,4 @@ duckduckgo-search
 networkx
 pytest
 pytest-cov
+flask>=2.3.0

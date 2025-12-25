@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberCouncil - Dashboard</title>
+    <link rel="stylesheet" href="/static/css/dashboard.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">
+            <span class="logo-icon">🧠</span>
+            <span class="logo-text">CyberCouncil</span>
+        </div>
+
+        <nav class="nav">
+            <a href="#" class="nav-item active" data-view="graph">
+                <span class="nav-icon">🕸️</span>
+                <span>Attack Graph</span>
+            </a>
+            <a href="#" class="nav-item" data-view="terminal">
+                <span class="nav-icon">💻</span>
+                <span>Terminal</span>
+            </a>
+            <a href="#" class="nav-item" data-view="logs">
+                <span class="nav-icon">📋</span>
+                <span>Pending Logs</span>
+            </a>
+            <a href="#" class="nav-item" data-view="crack">
+                <span class="nav-icon">🔐</span>
+                <span>Hash Cracker</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="status-indicator" id="status-dot"></div>
+            <span id="project-name">No Project</span>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <h1 id="view-title">Attack Graph</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="refresh-btn">
+                    <span>↻</span> Refresh
+                </button>
+            </div>
+        </header>
+
+        <!-- Views -->
+        <div class="view-container">
+            <!-- Graph View -->
+            <div class="view active" id="view-graph">
+                <div class="graph-toolbar">
+                    <select id="layout-select" class="select">
+                        <option value="cose">Force Layout</option>
+                        <option value="circle">Circle</option>
+                        <option value="grid">Grid</option>
+                        <option value="breadthfirst">Hierarchy</option>
+                    </select>
+                    <input type="text" id="search-input" class="input" placeholder="Search nodes...">
+                </div>
+                <div id="cy" class="graph-container"></div>
+                <div class="stats-bar" id="stats-bar">
+                    <div class="stat">
+                        <span class="stat-icon">🎯</span>
+                        <span class="stat-value" id="stat-nodes">0</span>
+                        <span class="stat-label">Nodes</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-icon">🔗</span>
+                        <span class="stat-value" id="stat-edges">0</span>
+                        <span class="stat-label">Edges</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal View -->
+            <div class="view" id="view-terminal">
+                <div class="terminal">
+                    <div class="terminal-output" id="terminal-output">
+                        <div class="line">Welcome to CyberCouncil Web Terminal</div>
+                        <div class="line dim">Type a command or message...</div>
+                    </div>
+                    <div class="terminal-input-container">
+                        <span class="prompt">></span>
+                        <input type="text" id="terminal-input" class="terminal-input" placeholder="Enter command...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logs View -->
+            <div class="view" id="view-logs">
+                <div class="logs-container" id="logs-container">
+                    <div class="empty-state">
+                        <span class="empty-icon">📋</span>
+                        <p>No pending logs</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crack View -->
+            <div class="view" id="view-crack">
+                <div class="crack-container">
+                    <div class="form-group">
+                        <label>Hash</label>
+                        <input type="text" id="crack-hash" class="input input-lg" placeholder="Paste hash here...">
+                    </div>
+                    <div class="form-group">
+                        <label>Wordlist (optional)</label>
+                        <input type="text" id="crack-wordlist" class="input"
+                            placeholder="/usr/share/wordlists/rockyou.txt">
+                    </div>
+                    <button class="btn btn-primary btn-lg" id="crack-btn">
+                        <span>⚡</span> Crack Hash
+                    </button>
+                    <div class="crack-result" id="crack-result"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Details Panel -->
+    <aside class="details-panel" id="details-panel">
+        <div class="panel-header">
+            <h3>Node Details</h3>
+            <button class="close-btn" id="close-panel">×</button>
+        </div>
+        <div class="panel-content" id="panel-content">
+            <p class="dim">Click a node to see details</p>
+        </div>
+    </aside>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="/static/js/dashboard.js"></script>
+</body>
+
+</html>

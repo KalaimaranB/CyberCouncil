@@ -1,42 +1,66 @@
-# ⚡ Quick Reference (V0.1)
+# Quick Reference
 
-## 🖥️ System Commands
+## Commands
 
-| Command | Alias | Description |
-| :--- | :--- | :--- |
-| `/sitrep` | `status`, `report` | Generate a Situation Report (Status, Findings, Next Steps). |
-| `/graph` | `show graph` | Display the ASCII Attack Graph. |
-| `/review` | `review logs` | Review and commit pending auto-logs. |
-| `/close` | `close investigation` | Finalize project, generate report, and exit. |
-| `/clear-logs` | `clear logs` | Discard all pending logs. |
-| `/search` | - | Search official docs (if configured). |
-| `exit` | `quit` | Exit the application. |
-
----
-
-## 🔄 Modes
-
-| Mode | Trigger | Description |
-| :--- | :--- | :--- |
-| **PROJECT** | Default | All queries use project context and are logged. |
-| **GENERAL** | `pause`, `teach` | No project context. Queries are NOT logged. Good for general learning. |
-| **RESUME** | `resume` | Return to PROJECT mode. |
+| Command | Description | Aliases |
+|---------|-------------|---------|
+| `/help` | Show all commands | `/help <cmd>` |
+| `/sitrep` | Situation report | `status`, `summary` |
+| `/graph` | Attack graph (terminal + web) | `show graph` |
+| `/dashboard` | Full web UI | `/web`, `/ui` |
+| `/crack HASH` | GPU hash cracking | `/crack --types` |
+| `/server start` | Start remote API | `/server stop` |
+| `/review` | Review pending logs | `review logs` |
+| `/clear-logs` | Clear pending logs | `clear logs` |
+| `/search QUERY` | Search security docs | - |
+| `/tutorial` | Interactive walkthrough | `/demo` |
+| `/close` | Finalize investigation | `close investigation` |
 
 ---
 
-## 🤖 AI Roles
+## Hash Cracking
 
-| Role | Model | Function |
-| :--- | :--- | :--- |
-| **Strategist** | Phi-4 | Planning, methodology, analysis, reporting. |
-| **Specialist** | DeepHat | Syntax, tools, payloads, technical execution. |
+```bash
+/crack HASH                    # Auto-detect type
+/crack --types                 # List supported types
+/crack -w /path/wordlist HASH  # Custom wordlist
+/crack -m 1000 HASH            # Force mode
+```
+
+**Supported**: NTLM, MD5, SHA-1/256/512, bcrypt, Kerberos, NetNTLMv2
 
 ---
 
-## 📂 Key Files
+## Tool Import
 
-| File | Location | Purpose |
-| :--- | :--- | :--- |
-| `active_record.md` | `projects/<name>/` | The living log of the engagement. |
-| `FINAL_REPORT.md` | `projects/<name>/` | Generated upon closing the project. |
-| `.env` | Root | Configuration (Model names, API keys). |
+Paste raw output from:
+- `nmap` - Ports, services, OS
+- `rustscan` - Open ports
+- `gobuster` - Directories
+- `wpscan` - WordPress vulns
+- `nikto` - Web vulns
+
+---
+
+## Remote Access (Kali VM)
+
+```bash
+# On Mac: Enable SSH in System Preferences
+
+# From Kali:
+ssh -L 5052:localhost:5052 user@MAC_IP
+cd /path/to/CyberCouncil
+python council.py
+/dashboard
+# Open http://localhost:5052 in Kali browser
+```
+
+---
+
+## Natural Input
+
+Just type naturally:
+- "Found DC at 10.10.10.5" → Auto-logged
+- "Port 445 is open" → Captured
+- "Username: admin" → Stored
+- "CVE-2021-44228 found" → Tracked

@@ -1,65 +1,330 @@
-# 🧠 CyberCouncil (V0.1)
+# CyberCouncil
 
-**AI-Powered Offensive Security Orchestrator**
-
-CyberCouncil is a terminal-based tool that assists security researchers by orchestrating two specialized AI models to plan, execute, and document security engagements. It combines RAG (Retrieval-Augmented Generation), an active knowledge graph, and automated logging to maintain context throughout an investigation.
+**AI-Powered Offensive Security Assistant** with dual-AI architecture, attack graph visualization, and GPU hash cracking.
 
 ---
 
-## 🚀 Core Objectives
+## Features
+ Acceleration: ENABLED (Apple Metal)
+✅ Knowledge base loaded (found indexed content)
 
-1.  **Orchestration**: Manage the workflow between strategic planning and tactical execution.
-2.  **Context Retention**: Automatically log findings and maintain a "memory" of the engagement using RAG and an Active Record.
-3.  **Relationship Mapping**: Visualize connections between discovered entities (IPs, ports, vulnerabilities) using a dynamic Attack Graph.
+═══════════════════════════════════════════════════════
+║                                                     ║
+║     🧠 CYBER COUNCIL - Intelligence System         ║
+║                                                     ║
+╠═══════════════════════════════════════════════════════╣
+║  Type /help for commands  │  /tutorial to learn     ║
+═══════════════════════════════════════════════════════
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /help
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option:  Acceleration: ENABLED (Apple Metal)
+✅ Knowledge base loaded (found indexed content)
+
+═══════════════════════════════════════════════════════
+║                                                     ║
+║     🧠 CYBER COUNCIL - Intelligence System         ║
+║                                                     ║
+╠═══════════════════════════════════════════════════════╣
+║  Type /help for commands  │  /tutorial to learn     ║
+═══════════════════════════════════════════════════════
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /help
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option:  Acceleration: ENABLED (Apple Metal)
+✅ Knowledge base loaded (found indexed content)
+
+═══════════════════════════════════════════════════════
+║                                                     ║
+║     🧠 CYBER COUNCIL - Intelligence System         ║
+║                                                     ║
+╠═══════════════════════════════════════════════════════╣
+║  Type /help for commands  │  /tutorial to learn     ║
+═══════════════════════════════════════════════════════
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /help
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option:  Acceleration: ENABLED (Apple Metal)
+✅ Knowledge base loaded (found indexed content)
+
+═══════════════════════════════════════════════════════
+║                                                     ║
+║     🧠 CYBER COUNCIL - Intelligence System         ║
+║                                                     ║
+╠═══════════════════════════════════════════════════════╣
+║  Type /help for commands  │  /tutorial to learn     ║
+═══════════════════════════════════════════════════════
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /help
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option:  Acceleration: ENABLED (Apple Metal)
+✅ Knowledge base loaded (found indexed content)
+
+═══════════════════════════════════════════════════════
+║                                                     ║
+║     🧠 CYBER COUNCIL - Intelligence System         ║
+║                                                     ║
+╠═══════════════════════════════════════════════════════╣
+║  Type /help for commands  │  /tutorial to learn     ║
+═══════════════════════════════════════════════════════
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /tutorial
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: /help
+Invalid choice. Try again.
+[1] New Project
+[2] Search Projects
+--- RECENT ---
+[3] Test2
+[4] TestOperation
+
+Select Option: 
+| Feature | Description |
+|---------|-------------|
+| 🤖 **Dual AI** | Strategist (planning) + Specialist (commands) |
+| 🕸️ **Attack Graph** | Interactive web visualization |
+| 📥 **Tool Import** | Auto-parse nmap, rustscan, gobuster, wpscan |
+| 🔐 **Hash Cracking** | GPU-accelerated with auto-detection |
+| 🌐 **Web Dashboard** | Full browser UI |
+| 📡 **Remote API** | Access from Kali VM |
 
 ---
 
-## 🛠️ Prerequisites
-
-1.  **Python 3.10+**
-2.  **Ollama**:
-    *   Install the [Ollama App](https://ollama.com/) (Mac/Linux/Windows).
-    *   Ensure the app is running in the background (tray icon visible).
-    *   *Note: You do NOT need to run `ollama serve` manually if the app is running.*
-3.  **Models**:
-    *   **Strategist**: `ollama pull phi4`
-    *   **Specialist**: [DeepHat-V1-7B-GGUF](https://huggingface.co/mradermacher/DeepHat-V1-7B-GGUF/blob/main/DeepHat-V1-7B.Q4_K_M.gguf) (See `SETUP_GUIDE.md` for import instructions).
-
----
-
-## 📦 Installation
+## Quick Start
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/YourUsername/CyberCouncil.git
-cd CyberCouncil
-
-# 2. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 3. Setup environment
-cp .env.example .env
-# Edit .env if you need to change model names
+# Run
+python council.py
+```
+
+On first run: `/tutorial` for guided walkthrough.
+
+---
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `/help` | Show all commands |
+| `/sitrep` | Strategic situation report |
+| `/graph` | Interactive attack graph |
+| `/dashboard` | Full web UI |
+| `/crack HASH` | GPU hash cracking |
+| `/server start` | Remote API for Kali |
+| `/review` | Manage pending logs |
+| `/close` | Finalize investigation |
+
+---
+
+## Tool Import
+
+Just paste raw output from:
+- **nmap** - Ports, services, OS
+- **rustscan** - Fast port scans
+- **gobuster** - Directories
+- **wpscan** - WordPress vulnerabilities
+- **nikto** - Web vulnerabilities
+
+---
+
+## Kali VM Access
+
+```bash
+ssh -L 5052:localhost:5052 user@MAC_IP
+python council.py
+/dashboard
+# Browser: http://localhost:5052
+```
+
+See [docs/KALI_VM_SETUP.md](docs/KALI_VM_SETUP.md) for details.
+
+---
+
+## Architecture
+
+```
+council.py          # Main entry
+├── core/           # Commands, AI clients
+├── ai/             # Router, vector engine
+├── graph/          # Attack graph visualization
+├── parsing/        # Discovery & tool parsers
+├── remote/         # API server, Kali client
+├── web/            # Dashboard UI
+└── utils/          # Tools, config, hash cracker
 ```
 
 ---
 
-## 🚦 Usage
+## License
 
-Start the council:
-
-```bash
-python main.py
-```
-
-### Common Commands
-
-| Command | Description |
-| :--- | :--- |
-| `/sitrep` | Generate a Situation Report summarizing current status. |
-| `/graph` | Display the current Attack Graph. |
-| `/review` | Review and commit pending logs to the Active Record. |
-| `/close` | Finalize the project and generate a report. |
-
-See [WALKTHROUGH.md](WALKTHROUGH.md) for a detailed usage guide.
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed configuration.
+MIT

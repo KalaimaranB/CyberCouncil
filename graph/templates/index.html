@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 CyberCouncil - Attack Graph</title>
+    
+    <!-- Cytoscape.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- Header Toolbar -->
+    <header class="toolbar">
+        <div class="toolbar-left">
+            <h1>🧠 CyberCouncil <span class="subtitle">Attack Graph</span></h1>
+        </div>
+        <div class="toolbar-center">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="🔍 Search nodes..." />
+            </div>
+        </div>
+        <div class="toolbar-right">
+            <div class="button-group">
+                <label>Layout:</label>
+                <select id="layoutSelect">
+                    <option value="cose">Force-Directed</option>
+                    <option value="breadthfirst">Hierarchical</option>
+                    <option value="circle">Circular</option>
+                    <option value="grid">Grid</option>
+                    <option value="concentric">Concentric</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button id="refreshBtn" class="btn btn-secondary" title="Reload graph from active_record.md">
+                    🔄 Refresh
+                </button>
+                <button id="fitBtn" class="btn btn-secondary" title="Fit graph to view">
+                    🎯 Fit
+                </button>
+                <button id="exportPngBtn" class="btn btn-primary" title="Export as PNG">
+                    📷 PNG
+                </button>
+                <button id="exportJsonBtn" class="btn btn-primary" title="Export as JSON">
+                    📋 JSON
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+        <!-- Filter Sidebar -->
+        <aside class="sidebar sidebar-left">
+            <div class="panel">
+                <h3>📊 Statistics</h3>
+                <div id="statsPanel" class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-value" id="statNodes">0</span>
+                        <span class="stat-label">Nodes</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="statEdges">0</span>
+                        <span class="stat-label">Edges</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>🔧 Filter by Type</h3>
+                <div id="filterPanel" class="filter-list">
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="ip" checked>
+                        <span class="filter-icon" style="color: #3B82F6;">🎯</span> IPs
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="service" checked>
+                        <span class="filter-icon" style="color: #22C55E;">⚙️</span> Services
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="port" checked>
+                        <span class="filter-icon" style="color: #EAB308;">🔌</span> Ports
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="vulnerability" checked>
+                        <span class="filter-icon" style="color: #EF4444;">🚨</span> Vulnerabilities
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="credential" checked>
+                        <span class="filter-icon" style="color: #A855F7;">🔑</span> Credentials
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="username" checked>
+                        <span class="filter-icon" style="color: #06B6D4;">👤</span> Usernames
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="domain" checked>
+                        <span class="filter-icon" style="color: #F8FAFC;">🏰</span> Domains
+                    </label>
+                    <label class="filter-item">
+                        <input type="checkbox" data-type="access" checked>
+                        <span class="filter-icon" style="color: #10B981;">✅</span> Access
+                    </label>
+                </div>
+            </div>
+            
+            <div class="panel">
+                <h3>🛤️ Path Finder</h3>
+                <div class="path-finder">
+                    <div class="path-input-group">
+                        <label>Source:</label>
+                        <select id="pathSource">
+                            <option value="">Select start node...</option>
+                        </select>
+                    </div>
+                    <div class="path-input-group">
+                        <label>Target:</label>
+                        <select id="pathTarget">
+                            <option value="">Select end node...</option>
+                        </select>
+                    </div>
+                    <button id="findPathBtn" class="btn btn-accent">Find Path</button>
+                    <button id="clearPathBtn" class="btn btn-secondary">Clear</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Graph Canvas -->
+        <main class="graph-container">
+            <div id="cy"></div>
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon">🕸️</div>
+                <h2>No Entities Discovered</h2>
+                <p>Start your engagement and discover IPs, services, and vulnerabilities.</p>
+                <p>They will appear here automatically.</p>
+            </div>
+        </main>
+
+        <!-- Details Panel -->
+        <aside class="sidebar sidebar-right" id="detailsPanel">
+            <div class="panel">
+                <h3>📋 Node Details</h3>
+                <div id="nodeDetails" class="node-details">
+                    <p class="hint">Click a node to see details</p>
+                </div>
+            </div>
+            
+            <div class="panel" id="neighborsPanel" style="display: none;">
+                <h3>🔗 Connected Nodes</h3>
+                <div id="neighborsList" class="neighbors-list"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <span>💀 CyberCouncil v0.1</span>
+        <span id="connectionStatus" class="status-indicator status-connected">● Connected</span>
+    </footer>
+
+    <!-- Graph Logic -->
+    <script src="/static/js/graph.js"></script>
+</body>
+</html>

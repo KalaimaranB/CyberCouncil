@@ -33,7 +33,7 @@ class SitrepCommand(Command):
         graph_stats = "Graph not initialized"
         if context.attack_graph:
             stats = context.attack_graph.get_statistics()
-            graph_stats = f"Nodes: {stats['nodes']}, Edges: {stats['edges']}"
+            graph_stats = f"Nodes: {stats['total_nodes']}, Edges: {stats['total_edges']}"
 
         # 3. Ask Strategist for Summary
         prompt = f"""

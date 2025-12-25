@@ -294,3 +294,70 @@ class AttackGraph:
         if node_id in self.graph:
             return list(self.graph.neighbors(node_id))
         return []
+    
+    def to_cytoscape_format(self) -> Dict:
+        """
+        Export graph in Cytoscape.js-compatible format.
+        
+        Returns:
+            Dict with 'elements' containing nodes and edges in Cytoscape format
+        """
+        elements = []
+        
+        # Node type styling metadata
+        node_colors = {
+            'IP': '#3B82F6',           # Blue
+            'SERVICE': '#22C55E',       # Green
+            'PORT': '#EAB308',          # Yellow
+            'VULNERABILITY': '#EF4444', # Red
+            'CREDENTIAL': '#A855F7',    # Purple
+            'USERNAME': '#06B6D4',      # Cyan
+            'DOMAIN': '#F8FAFC',        # White
+            'ACCESS': '#10B981',        # Emerald
+            'UNKNOWN': '#6B7280',       # Gray
+        }
+        
+        node_icons = {
+            'IP': '🎯',
+            'SERVICE': '⚙️',
+            'PORT': '🔌',
+            'VULNERABILITY': '🚨',
+            'CREDENTIAL': '🔑',
+            'USERNAME': '👤',
+            'DOMAIN': '🏰',
+            'ACCESS': '✅',
+        }
+        
+        # Export nodes
+        for node_id, attrs in self.graph.nodes(data=True):
+            node_type = attrs.get('type', 'UNKNOWN')
+            elements.append({
+                'data': {
+                    'id': node_id,
+                    'label': f"{node_icons.get(node_type, '📍')} {node_id}",
+                    'type': node_type,
+                    'color': node_colors.get(node_type, node_colors['UNKNOWN']),
+                    **{k: v for k, v in attrs.items() if k != 'type'}
+                },
+                'classes': node_type.lower()
+            })
+        
+        # Export edges
+        for source, target, attrs in self.graph.edges(data=True):
+            relationship = attrs.get('relationship', 'connected_to')
+            elements.append({
+                'data': {
+                    'id': f"{source}-{target}",
+                    'source': source,
+                    'target': target,
+                    'label': relationship,
+                    'relationship': relationship,
+                    **{k: v for k, v in attrs.items() if k != 'relationship'}
+                }
+            })
+        
+        return {
+            'elements': elements,
+            'stats': self.get_statistics()
+        }
+

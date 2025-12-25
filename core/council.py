@@ -3,6 +3,7 @@ from langchain_core.documents import Document
 from ai.vector_engine import PyTorchEmbedder
 from ui.terminal_renderer import TerminalRenderer
 from parsing.discovery_parser import DiscoveryParser
+from parsing.tool_parser import ToolOutputParser, is_likely_tool_output
 from ai.router import QueryRouter
 from parsing.logger import Logger
 from graph.attack_graph import AttackGraph
@@ -13,6 +14,11 @@ from core.session_manager import SessionManager
 from core.commands.sitrep import SitrepCommand
 from core.commands.graph import GraphCommand
 from core.commands.finalize import FinalizeCommand
+from core.commands.help import HelpCommand
+from core.commands.tutorial import TutorialCommand
+from core.commands.crack import CrackCommand
+from remote import api_server
+from web import dashboard as web_dashboard
 from utils import project_status
 from utils import tools
 import sys
@@ -92,86 +98,9 @@ class CyberCouncil:
         except Exception as e:
             print(f"Cleanup warning: {e}")
     
- 
-    
-
-    
-
-    
-    def review_pending_logs(self):
-        """Allows user to review and commit pending logs"""
-        if not self.pending_logs:
-            print("📋 No pending logs to review.")
-            return
-        
-        print(f"\n📋 Pending Logs ({len(self.pending_logs)} items):")
-        print("-" * 60)
-        for i, log in enumerate(self.pending_logs):
-            print(f"[{i}] {log['section']:20s} | {log['query'][:50]}")
-        print("-" * 60)
-        
-        choice = input("\nCommit (a)ll, (s)elective, (c)ancel, or (v)iew details? ").lower()
-        
-        if choice == 'a':
-            for log in self.pending_logs:
-                tools.update_active_record(
-                    self.current_project,
-                    log['section'],
-                    log['query']
-                )
-            print(f"✅ Committed all {len(self.pending_logs)} logs")
-            self.pending_logs = []
-        
-        elif choice == 's':
-            indices_str = input("Enter numbers to commit (e.g., 0,2,5 or 0-3): ").strip()
-            try:
-                # Parse ranges and individual numbers
-                indices = set()
-                for part in indices_str.split(','):
-                    if '-' in part:
-                        start, end = map(int, part.split('-'))
-                        indices.update(range(start, end + 1))
-                    else:
-                        indices.add(int(part))
-                
-                committed = 0
-                for i in sorted(indices, reverse=True):
-                    if 0 <= i < len(self.pending_logs):
-                        log = self.pending_logs[i]
-                        tools.update_active_record(
-                            self.current_project,
-                            log['section'],
-                            log['query']
-                        )
-                        self.pending_logs.pop(i)
-                        committed += 1
-                
-                print(f"✅ Committed {committed} log(s)")
-            except (ValueError, IndexError) as e:
-                print(f"❌ Invalid selection: {e}")
-        
-        elif choice == 'v':
-            idx_str = input("Enter log number to view: ").strip()
-            try:
-                idx = int(idx_str)
-                if 0 <= idx < len(self.pending_logs):
-                    log = self.pending_logs[idx]
-                    print(f"\n--- Log #{idx} ---")
-                    print(f"Section: {log['section']}")
-                    print(f"Query: {log['query']}")
-                    print(f"Response preview:\n{log['response_preview']}")
-                    print("-" * 60)
-                else:
-                    print("❌ Invalid index")
-            except ValueError:
-                print("❌ Invalid input")
-        
-        elif choice == 'c':
-            print("❌ Review cancelled. Logs still pending.")
-        else:
-            print("❌ Invalid choice.")
 
     # --- PROJECT MANAGEMENT ---
+
 
 
     def generate_sitrep(self):
@@ -258,9 +187,20 @@ class CyberCouncil:
         print(f"\n🛑 CLOSING CEREMONY INITIATED FOR: [{self.current_project}]")
         confirm = input(f"This will parse the active record, generate 'Lessons Learned', and archive the project.\nProceed? (y/n): ")
         if confirm.lower() != 'y':
-    
+            return False
+            
+        # Execute finalize command
+        return FinalizeCommand().execute(self)
+
     def run(self):
-        print("\n--- 🧠 CYBER COUNCIL ONLINE 🧠 ---")
+        # Welcome banner
+        print("\n" + "═" * 55)
+        print("║" + " " * 53 + "║")
+        print("║     🧠 CYBER COUNCIL - Intelligence System         ║")
+        print("║" + " " * 53 + "║")
+        print("╠═══════════════════════════════════════════════════════╣")
+        print("║  Type /help for commands  │  /tutorial to learn     ║")
+        print("═" * 55)
         
         # --- 1. STARTUP MENU ---
         while True:
@@ -306,6 +246,13 @@ class CyberCouncil:
                     break
                 else:
                     print("Invalid choice. Try again.")
+            # Handle /help at startup menu
+            elif choice.lower().startswith("/help"):
+                args = choice[5:].strip()
+                HelpCommand().execute(self, args)
+            # Handle /tutorial at startup menu  
+            elif choice.lower() in ["/tutorial", "/demo", "tutorial"]:
+                TutorialCommand().execute(self)
             else:
                 print("Invalid choice. Try again.")
 
@@ -338,6 +285,28 @@ class CyberCouncil:
             if user_input.lower() in ["exit", "quit"]: break
             if not user_input.strip(): continue
             
+            # --- TOOL OUTPUT PARSING ---
+            # Check if input looks like tool output (multi-line, technical)
+            if is_likely_tool_output(user_input) and self.context_mode == "PROJECT":
+                tool_parser = ToolOutputParser(self.current_project)
+                result = tool_parser.parse(user_input)
+                if result:
+                    print(f"\n🔧 Detected {result['tool'].upper()} output!")
+                    print(f"📁 Raw saved to: {result['raw_file']}")
+                    print(result['summary'])
+                    
+                    # Log all discoveries
+                    for discovery in result['discoveries']:
+                        log_msg = self.logger.auto_log_discovery(self.current_project, discovery)
+                        print(log_msg)
+                    
+                    # Update attack graph
+                    if self.attack_graph and result['discoveries']:
+                        GraphCommand().update(self)
+                    
+                    print(f"\n✅ Imported {len(result['discoveries'])} discoveries from {result['tool']}")
+                    continue
+            
             # --- DISCOVERY AUTO-LOGGING ---
             # Extract and log discoveries immediately
             discoveries = self.discovery_parser.extract_discoveries(user_input)
@@ -369,14 +338,78 @@ class CyberCouncil:
                 SitrepCommand().execute(self)
                 continue
             
+            # Help command
+            if user_input.lower().startswith("/help"):
+                args = user_input[5:].strip()  # Get anything after /help
+                HelpCommand().execute(self, args)
+                continue
+            
+            # Tutorial command
+            if user_input.lower() in ["/tutorial", "/demo", "tutorial"]:
+                TutorialCommand().execute(self)
+                continue
+            
             # Review pending logs
             if user_input.lower() in ["/review", "review logs"]:
-                self.review_pending_logs()
+                self.logger.review_pending_logs(self.current_project)
                 continue
             
             # Show attack graph
             if user_input.lower() in ["/graph", "graph", "show graph"]:
                 GraphCommand().execute(self)
+                continue
+            
+            # Hash cracking
+            if user_input.lower().startswith("/crack"):
+                args = user_input[6:].strip()
+                CrackCommand().execute(self, args)
+                continue
+            
+            # Remote server control
+            if user_input.lower().startswith("/server"):
+                args = user_input[7:].strip().lower()
+                if args == 'start':
+                    if api_server.start_server(self):
+                        ip = api_server.get_local_ip()
+                        print(f"\n🌐 Remote API server started!")
+                        print(f"   URL: http://{ip}:5051")
+                        print(f"   From Kali: ./council-client.py --host {ip} \"message\"")
+                    else:
+                        print("⚠️  Server already running")
+                elif args == 'stop':
+                    api_server.stop_server()
+                    print("🚫 Server stopped")
+                elif args == 'status':
+                    if api_server.is_running():
+                        ip = api_server.get_local_ip()
+                        print(f"✅ Server running at http://{ip}:5051")
+                    else:
+                        print("❌ Server not running")
+                else:
+                    print("Usage: /server start | stop | status")
+                continue
+            
+            # Web Dashboard
+            if user_input.lower() in ["/dashboard", "/web", "/ui"]:
+                import webbrowser
+                import threading
+                
+                app, socketio = web_dashboard.create_dashboard_app(self)
+                port = 5052
+                ip = api_server.get_local_ip()
+                
+                def run_dashboard():
+                    socketio.run(app, host='0.0.0.0', port=port, debug=False, use_reloader=False)
+                
+                thread = threading.Thread(target=run_dashboard, daemon=True)
+                thread.start()
+                
+                import time
+                time.sleep(0.5)
+                
+                url = f"http://{ip}:{port}"
+                print(f"\n🌐 Web Dashboard started at {url}")
+                webbrowser.open(url)
                 continue
             
             # Clear pending logs

@@ -14,6 +14,7 @@ import ollama
 import time
 from typing import List, Dict
 from core import config
+from ui.spinner import Spinner
 
 
 class OllamaClient:
@@ -88,7 +89,7 @@ class OllamaClient:
             print("Please ensure Ollama is running.")
             return False
     
-    def call_with_retry(self, model: str, messages: List[Dict], max_retries: int = None) -> str:
+    def call_with_retry(self, model: str, messages: List[Dict], max_retries: int = None, show_spinner: bool = False, spinner_message: str = None) -> str:
         """
         Call Ollama API with exponential backoff retry logic.
         
@@ -96,6 +97,8 @@ class OllamaClient:
             model: Model name to use
             messages: List of message dicts with 'role' and 'content'
             max_retries: Maximum retry attempts (default: from config)
+            show_spinner: Whether to show loading spinner
+            spinner_message: Custom message for spinner
             
         Returns:
             AI response content as string
@@ -106,18 +109,32 @@ class OllamaClient:
         if max_retries is None:
             max_retries = config.OLLAMA_MAX_RETRIES
         
-        for attempt in range(max_retries):
-            try:
-                response = ollama.chat(model=model, messages=messages)
-                return response['message']['content']
-            except Exception as e:
-                if attempt == max_retries - 1:
-                    # Final attempt failed
-                    raise
-                
-                wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s
-                print(f"⚠️  Retry {attempt + 1}/{max_retries} (waiting {wait_time}s): {e}")
-                time.sleep(wait_time)
+        spinner = None
+        if show_spinner:
+            spinner = Spinner()
+            msg = spinner_message or f"Querying {model}"
+            spinner.start(msg)
+        
+        try:
+            for attempt in range(max_retries):
+                try:
+                    response = ollama.chat(model=model, messages=messages)
+                    return response['message']['content']
+                except Exception as e:
+                    if attempt == max_retries - 1:
+                        # Final attempt failed
+                        raise
+                    
+                    wait_time = 2 ** attempt  # Exponential backoff: 1s, 2s, 4s
+                    if spinner:
+                        spinner.stop()
+                    print(f"⚠️  Retry {attempt + 1}/{max_retries} (waiting {wait_time}s): {e}")
+                    time.sleep(wait_time)
+                    if spinner:
+                        spinner.start(spinner_message or f"Retrying {model}")
+        finally:
+            if spinner:
+                spinner.stop()
     
     def call_strategist(self, prompt: str) -> str:
         """
@@ -131,7 +148,9 @@ class OllamaClient:
         """
         return self.call_with_retry(
             self.strategist_model,
-            [{'role': 'user', 'content': prompt}]
+            [{'role': 'user', 'content': prompt}],
+            show_spinner=True,
+            spinner_message="Strategist analyzing"
         )
     
     def call_specialist(self, prompt: str) -> str:
@@ -146,7 +165,9 @@ class OllamaClient:
         """
         return self.call_with_retry(
             self.specialist_model,
-            [{'role': 'user', 'content': prompt}]
+            [{'role': 'user', 'content': prompt}],
+            show_spinner=True,
+            spinner_message="Specialist processing"
         )
     
     def classify_log_section(self, user_query: str, ai_response: str) -> str:
